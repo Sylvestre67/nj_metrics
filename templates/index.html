@@ -1,26 +1,113 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>New Jersey Voters Metrics</title>
-</head>
-<body>
+{%  extends 'base.html' %}
 
-<h1>A collection of metrics about New Jersey voting habits</h1>
+    {% block header_title %} New Jersey Voters Metrics {%  endblock %}
 
-<div class="v_p_c" id = "chartdiv">
 
+
+{%  block body %}
+
+
+<h1>A collection of New Jersey voters metrics</h1>
+<div class="container">
+    <div class="row">
+
+        <div class="col-xs-12 col-md-12 col-lg-12">
+            <h2>Which New Jersey County has the most of Voters ?</h2>
+            <p>{{url_parts}}</p>
+            <!--First AmChart -->
+            <script type="text/javascript">
+                        AmCharts.makeChart("chartdiv",
+                        {
+                                "type": "serial",
+                                "dataLoader": {
+                                    "url": "http://127.0.0.1:8000/CSV/Counties/",
+                                    "format": "csv",
+                                    "delimiter": ",",       // column separator
+                                    "useColumnNames": true, // use first row for column names
+                                    "skip": 1               // skip header row
+                                },
+                                "categoryField": "category",
+                                "angle": 17,
+                                "marginBottom": 18,
+                                "plotAreaBorderColor": "#FFFFFF",
+                                "plotAreaFillColors": "#0000FF",
+                                "startDuration": 0.5,
+                                "startEffect": "easeOutSine",
+                                "color": "#FFFFFF",
+                                "fontFamily": "Helvetica",
+                                "fontSize": 12,
+                                "handDrawn": true,
+                                "categoryAxis": {
+                                    "autoRotateAngle": 45,
+                                    "autoRotateCount": 0,
+                                    "gridPosition": "start",
+                                    "axisColor": "#FFFFFF",
+                                    "fontSize": 16,
+                                    "gridColor": "#FFFFFF",
+                                    "labelOffset": 5,
+                                    "tickLength": 7,
+                                    "handDrawn": true,
+                                },
+                            "trendLines": [],
+                            "graphs": [
+                                {
+                                    "balloonText": "[[category]] : [[value]]",
+                                    "columnWidth": 0.13,
+                                    "fillAlphas": 1,
+                                    "fillColors": "#FFFFFF",
+                                    "fontSize": 0,
+                                    "gapPeriod": null,
+                                    "id": "AmGraph-1",
+                                    "lineColor": "#FFFFFF",
+                                    "lineThickness": 0,
+                                    "negativeFillAlphas": 0,
+                                    "showAllValueLabels": true,
+                                    "title": "graph 1",
+                                    "topRadius": 0,
+                                    "type": "column",
+                                    "valueAxis": "ValueAxis-1",
+                                    "valueField": "column-1"
+                                }
+                            ],
+                            "guides": [],
+                            "valueAxes": [
+                                {
+                                    "id": "ValueAxis-1",
+                                    "autoGridCount": false,
+                                    "axisColor": "#FFFFFF",
+                                    "title": ""
+                                }
+                            ],
+                            "allLabels": [],
+                            "balloon": {},
+                            "titles": [],
+                            "dataProvider": []
+                        }
+            );
+            </script>
+
+            <div class="v_p_c center-block"  style="width: 640px; height: 400px;" id = "chartdiv"></div>
+
+        </div>
+
+    </div>
 </div>
 
 
-<div class="v_p_y" id = "chartdiv">
+
+<!--Second AmChart-->
+
+
+<div class="v_p_y" style="width: 640px; height: 400px;" id = "chartdiv2">
 
 </div>
 
+<!--Third AmChart-->
 
-<div class="v_p_p" id = "chartdiv">
+
+<div class="v_p_p" id = "">
 
 </div>
 
-</body>
-</html>
+ {% endblock %}
+

@@ -3,22 +3,21 @@ from django.core.urlresolvers import resolve,reverse
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 
-from metrics.views import index,counties_JSON
+from metrics.views import index,counties_csv,years_csv,party_csv
 from metrics.models import Year, County, Party
 
+from random import randint
 
-def create_counties():
-    first_county = County()
-    first_county.name = 'GLOUCESTER'
-    first_county.number = 250000
-    first_county.save()
+def create_objects(Object):
+    for i in range(1,5,1):
+        object = Object()
+        object.name = str(randint(2008,2020))
+        object.number = randint(250000, 450000)
+        object.save()
 
-    second_county = County()
-    second_county.name = 'ATLANTIC'
-    second_county.number = 365000
-    second_county.save()
+    return Object.objects.all()
 
-    return County.objects.all()
+
 
 # Create your tests here.
 class IndexViewTest(TestCase):
@@ -78,20 +77,70 @@ class ModelTest(TestCase):
         self.assertEqual(parties.count(), 2)
 
 
-
 class SerializerModelTest(TestCase):
 
-    def test_counties_url_serializer_view_resolve_to_JSON_file(self):
-        found = resolve(reverse('counties_JSON'))
-        self.assertEqual(found.func, counties_JSON)
+    def url_resolve_to_view(self,url_name,view):
+        found = resolve(reverse(url_name))
+        self.assertEqual(found.func, view)
 
-    def test_JSON_counties_files_created(self):
-        counties = create_counties()
+    def view_generates_csv_file(self,view):
         request = HttpRequest()
-        response = counties_JSON(request)
-        print('Response is: ')
-        print(response)
-        self.assertIn('metrics.county', response)
+        response = view(request)
+        self.assertEqual('text/csv', response._headers['content-type'][1])
+
+    def object_in_csv(self,view,object):
+        request = HttpRequest()
+        response = counties_csv(request)
+        self.assertIn(object, response.content.decode())
+
+    def test_counties_url_serializer_view_resolve_to_csv_file(self):
+        self.url_resolve_to_view('counties_csv',counties_csv)
+
+    def test_csv_counties_view_generates_csv_file(self):
+        counties = create_objects(County)
+        request = HttpRequest()
+        response = counties_csv(request)
+        self.assertEqual('text/csv', response._headers['content-type'][1])
+
+    def test_csv_counties_in_csv_file(self):
+        counties = create_objects(County)
+        first_counties_name = County.objects.all()[0].name
+        request = HttpRequest()
+        response = counties_csv(request)
+        self.assertIn(first_counties_name, response.content.decode())
+
+    def test_year_url_serializer_view_resolve_to_csv_file(self):
+        self.url_resolve_to_view('years_csv',years_csv)
+
+    def test_csv_years_view_generates_csv_file(self):
+        counties = create_objects(Year)
+        self.view_generates_csv_file(years_csv)
+
+    def test_years_in_csv_file(self):
+        years = create_objects(Year)
+        first_years_name = Year.objects.all()[0].name
+        request = HttpRequest()
+        response = years_csv(request)
+        self.assertIn(first_years_name, response.content.decode())
+
+    def test_party_url_serializer_view_resolve_to_csv_file(self):
+        self.url_resolve_to_view('party_csv',party_csv)
+
+    def test_csv_party_view_generates_csv_file(self):
+        counties = create_objects(Party)
+        self.view_generates_csv_file(counties_csv)
+
+    def test_party_in_csv_file(self):
+        counties = create_objects(Party)
+        first_party_name = Party.objects.all()[0].name
+        request = HttpRequest()
+        response = party_csv(request)
+        print(response.content)
+        self.assertIn(first_party_name, response.content.decode())
+
+
+
+
 
 
 
