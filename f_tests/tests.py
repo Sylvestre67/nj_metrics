@@ -2,6 +2,7 @@ __author__ = 'Sylvestre'
 
 from selenium import webdriver
 from django.test import LiveServerTestCase
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import unittest
 import time
@@ -25,7 +26,19 @@ class NewVisitorTest(LiveServerTestCase):
         title = self.browser.find_element_by_tag_name('h1')
         self.assertIn('A collection of metrics', title.text)
 
+        #He starts by exploring the first section of this home page, dedicated to the number of voters per county.
+        #He noticed a chart in this section.
+        chart = self.browser.find_element_by_class_name('v_p_c')
+        self.assertEqual( "chartdiv", chart.get_attribute('id'))
 
+        #He scroll down a little bit further and keeps reading about the number of votes per yer.
+
+        chart = self.browser.find_element_by_class_name('v_p_y')
+        self.assertEqual( "chartdiv", chart.get_attribute('id'))
+
+        #He finally spend some time analyzing the pie chart on vote repartition per side (Democrate/Republicans/UNA)
+        chart = self.browser.find_element_by_class_name('v_p_p')
+        self.assertEqual( "chartdiv", chart.get_attribute('id'))
 
 
         self.fail('Finish the test!')
