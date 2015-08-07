@@ -1,7 +1,32 @@
-body {
-    background-color:#66a1ee;
+@font-face {
+    font-family: Skinny;
+    src: url("fonts/Skinny-Regular.otf");
 }
 
-#chartdiv > .amcharts-main-div{
+body{
+     background-color:#66a1ee;
+    color:#fff;
+}
 
+h1,h2,h3,h4,h5,h6 {
+    font-family: 'Handlee', 'Lucinda', cursive;
+}
+
+p{
+    font-family: 'Abel', sans-serif;
+    font-size:1.4em;
+}
+
+.g-wraper{
+    width:80%;
+    min-height:400px;
+}
+
+.footer{
+    margin-top:2em;
+}
+
+.footer > div > p {
+    text-align:center;
+    font-size:1em;
 }
