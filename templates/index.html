@@ -13,7 +13,7 @@
 
         <div class="col-xs-12 col-md-12 col-lg-12">
             <h2>Which New Jersey County has the most of Voters ?</h2>
-            <p>{{url_parts}}</p>
+
             <!--First AmChart -->
             <script type="text/javascript">
                         AmCharts.makeChart("chartdiv",
@@ -108,76 +108,17 @@
         <div class="col-xs-12 col-md-12 col-lg-12">
             <h2>NJ Votes in Years</h2>
             <!--Second AmChart-->
-            <script type="text/javascript">
-                        AmCharts.makeChart("chartdiv2",
-                        {
-                                "type": "serial",
-                                "dataLoader": {
-                                    "url": "http://127.0.0.1:8000/CSV/Years/",
-                                    "format": "csv",
-                                    "delimiter": ",",       // column separator
-                                    "useColumnNames": true, // use first row for column names
-                                    "skip": 1               // skip header row
-                                },
-                                "categoryField": "category",
-                                "angle": 17,
-                                "marginBottom": 18,
-                                "plotAreaBorderColor": "#FFFFFF",
-                                "plotAreaFillColors": "#0000FF",
-                                "startDuration": 0.5,
-                                "startEffect": "easeOutSine",
-                                "color": "#FFFFFF",
-                                "fontFamily": "Helvetica",
-                                "fontSize": 12,
-                                "handDrawn": true,
-                                "categoryAxis": {
-                                    "autoRotateAngle": 45,
-                                    "autoRotateCount": 0,
-                                    "gridPosition": "start",
-                                    "axisColor": "#FFFFFF",
-                                    "fontSize": 16,
-                                    "gridColor": "#FFFFFF",
-                                    "labelOffset": 5,
-                                    "tickLength": 7,
-                                    "handDrawn": true,
-                                },
-                            "trendLines": [],
-                            "graphs": [
-                                {
-                                    "balloonText": "[[category]] : [[value]]",
-                                    "columnWidth": 0.13,
-                                    "fillAlphas": 1,
-                                    "fillColors": "#FFFFFF",
-                                    "fontSize": 0,
-                                    "gapPeriod": null,
-                                    "id": "AmGraph-1",
-                                    "lineColor": "#FFFFFF",
-                                    "lineThickness": 0,
-                                    "negativeFillAlphas": 0,
-                                    "showAllValueLabels": true,
-                                    "title": "graph 1",
-                                    "topRadius": 0,
-                                    "type": "column",
-                                    "valueAxis": "ValueAxis-1",
-                                    "valueField": "column-1"
-                                }
-                            ],
-                            "guides": [],
-                            "valueAxes": [
-                                {
-                                    "id": "ValueAxis-1",
-                                    "autoGridCount": false,
-                                    "axisColor": "#FFFFFF",
-                                    "title": ""
-                                }
-                            ],
-                            "allLabels": [],
-                            "balloon": {},
-                            "titles": [],
-                            "dataProvider": []
-                        }
-            );
-            </script>
+
+            <div class="d-down">
+
+                 <select id="vys">
+                      <option value="">New Jersey</option>
+                      <option value="GLOUCESTER">Gloucester</option>
+                      <option value="ATLANTIC">Atlantic</option>
+                      <option value="BERGEN">Bergen</option>
+                 </select>
+
+            </div>
 
             <div class="v_p_y center-block g-wraper" id = "chartdiv2">
 
@@ -199,77 +140,28 @@
 
         <div class="col-xs-12 col-md-12 col-lg-12">
             <h2>What about the party ?</h2>
-            <!--Third AmChart-->
-            <script type="text/javascript">
-                        AmCharts.makeChart("chartdiv3",
-                        {
-                                "type": "serial",
-                                "dataLoader": {
-                                    "url": "http://127.0.0.1:8000/CSV/Parties/",
-                                    "format": "csv",
-                                    "delimiter": ",",       // column separator
-                                    "useColumnNames": true, // use first row for column names
-                                    "skip": 1               // skip header row
-                                },
-                                "categoryField": "category",
-                                "angle": 17,
-                                "marginBottom": 18,
-                                "plotAreaBorderColor": "#FFFFFF",
-                                "plotAreaFillColors": "#0000FF",
-                                "startDuration": 0.5,
-                                "startEffect": "easeOutSine",
-                                "color": "#FFFFFF",
-                                "fontFamily": "Helvetica",
-                                "fontSize": 12,
-                                "handDrawn": true,
-                                "categoryAxis": {
-                                    "autoRotateAngle": 45,
-                                    "autoRotateCount": 0,
-                                    "gridPosition": "start",
-                                    "axisColor": "#FFFFFF",
-                                    "fontSize": 16,
-                                    "gridColor": "#FFFFFF",
-                                    "labelOffset": 5,
-                                    "tickLength": 7,
-                                    "handDrawn": true,
-                                },
-                            "trendLines": [],
-                            "graphs": [
-                                {
-                                    "balloonText": "[[category]] : [[value]]",
-                                    "columnWidth": 0.13,
-                                    "fillAlphas": 1,
-                                    "fillColors": "#FFFFFF",
-                                    "fontSize": 0,
-                                    "gapPeriod": null,
-                                    "id": "AmGraph-1",
-                                    "lineColor": "#FFFFFF",
-                                    "lineThickness": 0,
-                                    "negativeFillAlphas": 0,
-                                    "showAllValueLabels": true,
-                                    "title": "graph 1",
-                                    "topRadius": 0,
-                                    "type": "column",
-                                    "valueAxis": "ValueAxis-1",
-                                    "valueField": "column-1"
-                                }
-                            ],
-                            "guides": [],
-                            "valueAxes": [
-                                {
-                                    "id": "ValueAxis-1",
-                                    "autoGridCount": false,
-                                    "axisColor": "#FFFFFF",
-                                    "title": ""
-                                }
-                            ],
-                            "allLabels": [],
-                            "balloon": {},
-                            "titles": [],
-                            "dataProvider": []
-                        }
-            );
-            </script>
+
+            <div class="row">
+
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                    <select class = 'vyp'>
+                          <option value="">New Jersey</option>
+                          <option value="GLOUCESTER">Gloucester</option>
+                          <option value="ATLANTIC">Atlantic</option>
+                          <option value="BERGEN">Bergen</option>
+                    </select>
+                </div>
+
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                    <select class = 'vyp'>
+                      <option value="">All</option>
+                      <option value="Presidential_2012">Presidential 2012</option>
+                      <option value="Senatorial_2009">Senatorial 2009</option>
+                      <option value="Referendum_2008">Referendum 2008</option>
+                    </select>
+                </div>
+
+            </div>
 
             <div class="v_p_p center-block g-wraper" id = "chartdiv3">
 
