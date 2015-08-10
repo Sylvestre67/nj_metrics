@@ -3,7 +3,8 @@
  */
 $( document ).ready(function() {
 
-    //Initiate Chart's parameter.
+
+    //Initiate Chart parameter.
     var catalog1 = {
                     "type": "serial",
                     "dataLoader": {
@@ -117,6 +118,7 @@ $( document ).ready(function() {
     make_chart(div1,catalog1);
     make_chart(div2,catalog2);
 
+    //Change the data source when other value is selected on select field(s).
     $('#vys').change(function(){
 
         console.log('You clicked the option!');
@@ -142,9 +144,6 @@ $( document ).ready(function() {
         make_chart(div2,catalog2);
 
     });
-
-
-
 
 
 

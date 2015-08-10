@@ -5,5 +5,5 @@ from metrics import models
 
 admin.site.register(models.County)
 admin.site.register(models.Party)
-admin.site.register(models.Year)
+admin.site.register(models.Election)
 

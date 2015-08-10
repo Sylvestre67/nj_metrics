@@ -3,10 +3,12 @@ from django.core.urlresolvers import resolve,reverse
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 
-from metrics.views import index,counties_csv,years_csv,party_csv
-from metrics.models import Year, County, Party
+from metrics.views import index,counties_csv,party_csv
+from metrics.models import Election, County, Party, number_of_votes,number_of_vote_per_year,get_voters_per_year
 
 from random import randint
+import datetime
+import radar
 
 def create_objects(Object):
     for i in range(1,5,1):
@@ -17,7 +19,41 @@ def create_objects(Object):
 
     return Object.objects.all()
 
+def create_counties():
+    for i in range(1,5,1):
+        object = County()
+        object.name = str(randint(2008,2020))
+        object.number = randint(250000, 450000)
+        object.save()
 
+    return County.objects.all()
+
+def create_elections(county):
+    for i in range(1,5,1):
+        object = Election()
+        object.name = str(randint(2008,2020))
+        object.date = radar.random_datetime()
+        object.county = county
+        object.save()
+
+    return Election.objects.all()
+
+def create_parties(election):
+        object = Party()
+        object.name = 'DEMOCRAT'
+        object.code = 'DEM'
+        object.election = election
+        object.number = 250000
+        object.save()
+
+        object2 = Party()
+        object2.name = 'DEMOCRAT'
+        object2.code = 'DEM'
+        object2.election = election
+        object2.number = 250000
+        object2.save()
+
+        return Election.objects.all()
 
 # Create your tests here.
 class IndexViewTest(TestCase):
@@ -36,19 +72,9 @@ class IndexViewTest(TestCase):
         request=HttpRequest
         response = index(request)
 
-
-
 class ModelTest(TestCase):
-    def test_can_save_year(self):
-        first_year = Year()
-        first_year.year = 2010
-        first_year.number = 250000
-        first_year.save()
 
-        years = Year.objects.all()
-        self.assertEqual(years.count(),1)
-
-    def test_can_save_county(self):
+     def test_can_save_county(self):
         first_county = County()
         first_county.name = 'GLOUCESTER'
         first_county.number = 250000
@@ -62,21 +88,63 @@ class ModelTest(TestCase):
         total = first_county.number + second_county.number
         self.assertEqual(total,(250000 + 365000))
 
-    def test_can_save_party(self):
-        dem = Party()
-        dem.name = 'Democratic Party'
-        dem.number = 250000
-        dem.save()
+     def test_can_save_election(self):
+        c = create_counties()
+        election = Election()
+        election.name = 'FIRE ELECTION'
+        election.date = datetime.date.today()
+        election.county = c[0]
+        election.save()
 
-        rep = Party()
-        rep.name = 'Republican Party'
-        rep.number = 250000
-        rep.save()
+        election = Election()
+        election.name = '"2006 MUNICIPAL"'
+        election.county = c[0]
+        election.save()
+
+        elections = Election.objects.all()
+        self.assertEqual(elections.count(), 2)
+
+     def test_can_save_party(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        first_party = Party()
+        first_party.code = 'DEM'
+        first_party.name = 'Democrat'
+        first_party.number = 250000
+        first_party.county = c[0]
+        first_party.election = e[0]
+        first_party.save()
 
         parties = Party.objects.all()
-        self.assertEqual(parties.count(), 2)
+        self.assertEqual(parties.count(),1)
+
+     def test_can_count_number_of_votes_per_elections(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
+        n =number_of_votes( e[0])
+        self.assertEqual(n,500000)
+
+     def test_can_retrieve_the_number_of_votes_for_a_specific_year(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
+
+        year = e[0].date.year
+        n_year = number_of_vote_per_year(year)
+
+        self.assertEqual(n_year,500000)
+
+     def test_can_create_a_directory_with_all_year_and_their_corresponding_number_of_vote(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
+
+        data = get_voters_per_year(e)
+        self.assertIn(e[0].date.year, data.keys())
 
 
+"""
 class SerializerModelTest(TestCase):
 
     def url_resolve_to_view(self,url_name,view):
@@ -109,20 +177,6 @@ class SerializerModelTest(TestCase):
         response = counties_csv(request)
         self.assertIn(first_counties_name, response.content.decode())
 
-    def test_year_url_serializer_view_resolve_to_csv_file(self):
-        self.url_resolve_to_view('years_csv',years_csv)
-
-    def test_csv_years_view_generates_csv_file(self):
-        counties = create_objects(Year)
-        self.view_generates_csv_file(years_csv)
-
-    def test_years_in_csv_file(self):
-        years = create_objects(Year)
-        first_years_name = Year.objects.all()[0].name
-        request = HttpRequest()
-        response = years_csv(request)
-        self.assertIn(first_years_name, response.content.decode())
-
     def test_party_url_serializer_view_resolve_to_csv_file(self):
         self.url_resolve_to_view('party_csv',party_csv)
 
@@ -138,12 +192,4 @@ class SerializerModelTest(TestCase):
         print(response.content)
         self.assertIn(first_party_name, response.content.decode())
 
-
-
-
-
-
-
-
-
-
+"""

@@ -37,13 +37,7 @@ def counties_csv(request):
 
     return response
 
-def years_csv(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="data.csv"'
-    data = models.Year.objects.all()
-    write_csv_data_feed(data,response)
 
-    return response
 
 def party_csv(request):
     response = HttpResponse(content_type='text/csv')

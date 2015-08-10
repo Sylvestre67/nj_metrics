@@ -17,6 +17,11 @@ p{
     font-size:1.4em;
 }
 
+.amcharts-chart-div > a {
+    text-decoration:none;
+    color:#66a1ee !important;
+}
+
 .g-wraper{
     width:80%;
     min-height:400px;

@@ -23,7 +23,6 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name='index'),
     url(r'^CSV/Counties/$', views.counties_csv, name='counties_csv'),
-    url(r'^CSV/Years/$', views.years_csv, name='years_csv'),
     url(r'^CSV/Parties/$', views.party_csv, name='party_csv'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
