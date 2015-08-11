@@ -3,8 +3,8 @@ from django.core.urlresolvers import resolve,reverse
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 
-from metrics.views import index,counties_csv,party_csv
-from metrics.models import Election, County, Party, number_of_votes,number_of_vote_per_year,get_voters_per_year
+from metrics.views import index,counties_csv,party_csv,votes_year_csv,votes_year_csv_county,votes_party_csv
+from metrics.models import Election, County, Party, number_of_votes,number_of_vote_per_year,get_voters_per_year,get_number_of_vote_per_party_per_election,get_number_of_vote_per_party_per_election_per_county
 
 from random import randint
 import datetime
@@ -47,13 +47,14 @@ def create_parties(election):
         object.save()
 
         object2 = Party()
-        object2.name = 'DEMOCRAT'
-        object2.code = 'DEM'
+        object2.name = 'REPUBLICAN'
+        object2.code = 'REP'
         object2.election = election
         object2.number = 250000
         object2.save()
 
-        return Election.objects.all()
+        return Party.objects.all()
+
 
 # Create your tests here.
 class IndexViewTest(TestCase):
@@ -135,16 +136,33 @@ class ModelTest(TestCase):
 
         self.assertEqual(n_year,500000)
 
-     def test_can_create_a_directory_with_all_year_and_their_corresponding_number_of_vote(self):
+     def test_can_create_a_dictionary_with_all_years_and_their_corresponding_number_of_vote(self):
         c = create_counties()
         e = create_elections(c[0])
         p = create_parties(e[0])
 
         data = get_voters_per_year(e)
         self.assertIn(e[0].date.year, data.keys())
+        self.assertEqual(number_of_vote_per_year(e[0].date.year), data[e[0].date.year])
 
+     def test_can_calculate_the_total_number_of_votes_per_party(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
 
-"""
+        n = get_number_of_vote_per_party_per_election(e[0])
+
+        self.assertEqual(n[p[0].name], 250000)
+
+     def get_number_of_vote_per_party_per_election_per_county(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
+
+        n = get_number_of_vote_per_party_per_election_per_county(e[0],c[0])
+
+        self.assertEqual(n[p[0].name], 250000)
+
 class SerializerModelTest(TestCase):
 
     def url_resolve_to_view(self,url_name,view):
@@ -177,19 +195,65 @@ class SerializerModelTest(TestCase):
         response = counties_csv(request)
         self.assertIn(first_counties_name, response.content.decode())
 
-    def test_party_url_serializer_view_resolve_to_csv_file(self):
-        self.url_resolve_to_view('party_csv',party_csv)
+    def test_votes_year_csv_url_serializer_view_resolve_to_csv_file(self):
+        self.url_resolve_to_view('votes_year_csv',votes_year_csv)
 
-    def test_csv_party_view_generates_csv_file(self):
-        counties = create_objects(Party)
-        self.view_generates_csv_file(counties_csv)
+    def test_votes_year_csv_view_generates_csv_file(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
 
-    def test_party_in_csv_file(self):
-        counties = create_objects(Party)
-        first_party_name = Party.objects.all()[0].name
+        self.view_generates_csv_file(votes_year_csv)
+
+    def test_votes_and_years_in_csv_file(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
+
+        election_year = str(e[0].date.year)
+
         request = HttpRequest()
-        response = party_csv(request)
+        response = votes_year_csv(request)
         print(response.content)
-        self.assertIn(first_party_name, response.content.decode())
+        self.assertIn(election_year, response.content.decode())
 
-"""
+    def test_votes_year_csv_county_url_serializer_view_resolve_to_csv_file(self):
+        c = create_counties()
+        print(reverse(votes_year_csv_county, args = [c[0].id]))
+
+        found = resolve(reverse(votes_year_csv_county, args = [c[0].id]))
+        self.assertEqual(found.func, votes_year_csv_county)
+
+    def test_votes_year_csv_county_view_generates_csv_file(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
+
+        request = HttpRequest()
+        response = votes_year_csv_county(request, c[0].id)
+        self.assertEqual('text/csv', response._headers['content-type'][1])
+
+    def test_number_per_year_are_filtered_per_county(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
+
+        request = HttpRequest()
+        response = votes_year_csv_county(request, c[0].id)
+
+        elections = Election.objects.filter(county = c[0])
+        data = get_voters_per_year(elections)
+
+        self.assertIn(str(data[elections[0].date.year]), response.content.decode())
+
+    def test_votes_per_party_resolve_to_a_view(self):
+        self.url_resolve_to_view('votes_party_csv',votes_party_csv)
+
+    def test_votes_per_party_generate_csv(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
+
+        request = HttpRequest()
+        response = votes_party_csv(request)
+        self.assertEqual('text/csv', response._headers['content-type'][1])

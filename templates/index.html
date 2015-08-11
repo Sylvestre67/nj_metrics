@@ -112,10 +112,10 @@
             <div class="d-down">
 
                  <select id="vys">
-                      <option value="">New Jersey</option>
-                      <option value="GLOUCESTER">Gloucester</option>
-                      <option value="ATLANTIC">Atlantic</option>
-                      <option value="BERGEN">Bergen</option>
+                     <option value="">New Jersey</option>
+                     {%  for c in counties %}
+                        <option value="{{ c.id }}">{{ c.name|capfirst }}</option>
+                      {%  endfor %}
                  </select>
 
             </div>
@@ -123,6 +123,7 @@
             <div class="v_p_y center-block g-wraper" id = "chartdiv2">
 
             </div>
+
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut rutrum tortor enim, in
                 tristique quam volutpat id. Suspendisse vitae neque sit amet enim interdum placerat ac at nisl.
                 Vivamus at semper nisi. Cras volutpat, felis quis tristique varius, metus turpis dignissim velit, tristique porta magna odio id neque.
@@ -145,10 +146,13 @@
 
                 <div class="col-xs-6 col-md-6 col-lg-6">
                     <select class = 'vyp'>
+
                           <option value="">New Jersey</option>
-                          <option value="GLOUCESTER">Gloucester</option>
-                          <option value="ATLANTIC">Atlantic</option>
-                          <option value="BERGEN">Bergen</option>
+
+                          {%  for c in counties %}
+                                <option value="{{ c.name }}">{{ c.name|capfirst }}</option>
+                          {%  endfor %}
+
                     </select>
                 </div>
 

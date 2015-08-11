@@ -24,5 +24,9 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^CSV/Counties/$', views.counties_csv, name='counties_csv'),
     url(r'^CSV/Parties/$', views.party_csv, name='party_csv'),
+    url(r'^CSV/votes_year_csv_county/$', views.votes_year_csv, name = 'votes_year_csv'),
+    url(r'^CSV/votes_year_csv_county/(?P<countyId>\d+)/$', views.votes_year_csv_county, name = 'votes_year_csv_county'),
+    url(r'^CSV/votes_party_csv/', views.votes_party_csv, name = 'votes_party_csv'),
+
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -103,10 +103,10 @@ $( document ).ready(function() {
     };
 
     //Set DataLoader and div for chart.
-    catalog1.dataLoader.url = 'http://127.0.0.1:8000/CSV/Counties/';
+    catalog1.dataLoader.url = 'http://127.0.0.1:8000/CSV/votes_year_csv_county/';
     var div1 = "chartdiv2";
 
-    catalog2.dataLoader.url = 'http://127.0.0.1:8000/CSV/Counties/';
+    catalog2.dataLoader.url = 'http://127.0.0.1:8000/CSV/votes_year_csv/';
     var div2 = "chartdiv3";
 
     //Chart drawing function.
@@ -126,7 +126,7 @@ $( document ).ready(function() {
 
         console.log(value);
 
-        catalog1.dataLoader.url = "http://127.0.0.1:8000/CSV/Years/" + value;
+        catalog1.dataLoader.url = "http://127.0.0.1:8000/CSV/votes_year_csv_county/" + value;
 
         make_chart(div1,catalog1);
 

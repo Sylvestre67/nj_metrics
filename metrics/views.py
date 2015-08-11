@@ -20,12 +20,14 @@ def write_csv_data_feed(queryset, response):
         writer.writerow(row)
         row=[]
 
-
 # Create your views here.
 def index(request):
     context = RequestContext(request)
     data_url = (reverse('counties_csv'))
-    return render_to_response('index.html',{'data_url' : data_url} , context)
+
+    counties = models.County.objects.all()
+
+    return render_to_response('index.html',{'data_url' : data_url, 'counties' : counties} , context)
 
 def counties_csv(request):
     response = HttpResponse(content_type='text/csv')
@@ -37,6 +39,70 @@ def counties_csv(request):
 
     return response
 
+def votes_year_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachement; filename="data.csv"'
+
+    elections = models.Election.objects.all()
+    data = models.get_voters_per_year(elections)
+
+    #Write the CSV header
+    writer = csv.writer(response)
+    writer.writerow(['category','column-1'])
+    #Inititate next row
+    row = []
+    #Populate next row
+    for c in data:
+        row.append(c)
+        row.append(data[c])
+        writer.writerow(row)
+        row=[]
+
+    return response
+
+def votes_year_csv_county(request,countyId):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachement; filename="data.csv"'
+
+    county = models.County.objects.get(id = countyId )
+
+    elections = models.Election.objects.filter(county = county)
+    data = models.get_voters_per_year(elections)
+
+    #Write the CSV header
+    writer = csv.writer(response)
+    writer.writerow(['category','column-1'])
+    #Inititate next row
+    row = []
+    #Populate next row
+    for c in data:
+        row.append(c)
+        row.append(data[c])
+        writer.writerow(row)
+        row=[]
+
+    return response
+
+def votes_party_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachement; filename="data.csv"'
+
+    parties = models.Party.objects.all()
+    data = []
+
+    #Write the CSV header
+    writer = csv.writer(response)
+    writer.writerow(['category','column-1'])
+    #Inititate next row
+    row = []
+    #Populate next row
+    for c in data:
+        row.append(c)
+        row.append(data[c])
+        writer.writerow(row)
+        row=[]
+
+    return response
 
 
 def party_csv(request):
