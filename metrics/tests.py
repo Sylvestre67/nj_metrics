@@ -257,3 +257,17 @@ class SerializerModelTest(TestCase):
         request = HttpRequest()
         response = votes_party_csv(request)
         self.assertEqual('text/csv', response._headers['content-type'][1])
+
+
+    def test_votes_per_party_contains_party_and_votes(self):
+        c = create_counties()
+        e = create_elections(c[0])
+        p = create_parties(e[0])
+
+        party_name = str(p[0].name)
+
+        request = HttpRequest()
+        response = votes_party_csv(request)
+        print(response.content)
+
+        self.assertIn(party_name, response.content.decode())

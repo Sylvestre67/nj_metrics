@@ -106,7 +106,7 @@ $( document ).ready(function() {
     catalog1.dataLoader.url = 'http://127.0.0.1:8000/CSV/votes_year_csv_county/';
     var div1 = "chartdiv2";
 
-    catalog2.dataLoader.url = 'http://127.0.0.1:8000/CSV/votes_year_csv/';
+    catalog2.dataLoader.url = 'http://127.0.0.1:8000/CSV/votes_party_csv/';
     var div2 = "chartdiv3";
 
     //Chart drawing function.

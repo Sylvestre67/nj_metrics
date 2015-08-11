@@ -88,7 +88,17 @@ def votes_party_csv(request):
     response['Content-Disposition'] = 'attachement; filename="data.csv"'
 
     parties = models.Party.objects.all()
-    data = []
+    print(parties)
+
+    data = dict()
+
+    for party in parties:
+        if not party.name in data.keys():
+            data[party.name] = party.number
+        else:
+            data[party.name] += party.number
+
+    print(data)
 
     #Write the CSV header
     writer = csv.writer(response)
